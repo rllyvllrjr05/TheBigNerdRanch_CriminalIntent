@@ -240,9 +240,7 @@ public class CrimeFragment extends Fragment {
         mSuspectButton = (Button) v.findViewById(R.id.crime_suspect);
         mSuspectButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivityForResult(pickContact, REQUEST_CONTACT);
-            }
+            public void onClick(View view) { startActivityForResult(pickContact, REQUEST_CONTACT); }
         });
 
         if (mCrime.getSuspect() != null) {

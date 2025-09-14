@@ -17,9 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -88,6 +91,33 @@ public class CrimeListFragment extends Fragment {
         });
 
         updateUI();
+
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                return false; // we don’t support drag & drop
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                Crime crime = mAdapter.getCrimes().get(position);
+
+                // remove from database
+                CrimeLab.get(getActivity()).deleteCrime(crime);
+
+                // update the adapter
+                mAdapter.getCrimes().remove(position);
+                mAdapter.notifyItemRemoved(position);
+            }
+        };
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(mCrimeRecyclerView);
+
         return view;
     }
 
@@ -279,6 +309,11 @@ public class CrimeListFragment extends Fragment {
         public int getItemCount() {
             return mCrimes.size();
         }
+
+        public List<Crime> getCrimes() {
+            return mCrimes;
+        }
+
     }
 
 
