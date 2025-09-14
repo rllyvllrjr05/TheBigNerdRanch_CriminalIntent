@@ -1,4 +1,4 @@
-package com.example.criminalintent;
+package com.example.criminalintent.database;
 
 public class CrimeDbSchema {
     public static final class CrimeTable {

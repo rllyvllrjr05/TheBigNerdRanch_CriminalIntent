@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="21"/>
+
     <uses-feature android:name="android.hardware.camera"
-        android:required="false"
-        />
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -28,9 +31,7 @@
 
         <activity
             android:name=".CrimePagerActivity"
-            android:parentActivityName=".CrimeListActivity"
-            android:exported="true"
-            android:theme="@style/Theme.CriminalIntent">
+            android:parentActivityName=".CrimeListActivity">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
@@ -46,6 +47,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/files"/>
         </provider>
+
+        <activity android:name=".DatePickerActivity"/>
+        <activity android:name=".TimePickerActivity"/>
     </application>
 
 </manifest>

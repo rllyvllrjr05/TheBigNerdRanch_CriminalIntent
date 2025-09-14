@@ -12,6 +12,7 @@ public class Crime {
     private Time mTime;
     private boolean mSolved;
     private String mSuspect;
+    private long mSuspectId;
     private boolean mRequiresPolice;
 
     public Crime() {
@@ -56,6 +57,9 @@ public class Crime {
     }
     public void setSuspect(String suspect) {
         mSuspect = suspect;
+    }
+    public long getSuspectId() {
+        return mSuspectId;
     }
     public String getPhotoFilename() {
         return "IMG_" + getId().toString() + ".jpg";

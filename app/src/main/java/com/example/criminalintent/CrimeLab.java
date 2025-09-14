@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.criminalintent.database.CrimeBaseHelper;
+import com.example.criminalintent.database.CrimeCursorWrapper;
+import com.example.criminalintent.database.CrimeDbSchema;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;

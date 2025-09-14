@@ -1,4 +1,4 @@
-package com.example.criminalintent;
+package com.example.criminalintent.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

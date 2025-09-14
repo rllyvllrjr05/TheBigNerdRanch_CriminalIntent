@@ -29,12 +29,11 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
-    private Callbacks mCallbacks;
-
     private int mUpdatedPosition = RecyclerView.NO_POSITION;
 
     private LinearLayout mEmptyView;
     private Button mAddCrimeButton;
+    private Callbacks mCallbacks;
 
     public interface Callbacks {
         void onCrimeSelected(Crime crime);

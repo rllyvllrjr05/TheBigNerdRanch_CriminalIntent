@@ -1,7 +1,9 @@
-package com.example.criminalintent;
+package com.example.criminalintent.database;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+
+import com.example.criminalintent.Crime;
 
 import java.sql.Time;
 import java.util.Date;
