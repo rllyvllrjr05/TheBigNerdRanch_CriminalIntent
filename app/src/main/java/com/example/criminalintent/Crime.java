@@ -1,6 +1,5 @@
 package com.example.criminalintent;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,17 +8,15 @@ public class Crime {
     private UUID mId;
     private String mTitle;
     private Date mDate;
-    private Time mTime;
+    private Date mTime;
     private boolean mSolved;
     private String mSuspect;
     private long mSuspectId;
     private boolean mRequiresPolice;
 
     public Crime() {
-//        this.mId = UUID.randomUUID();
-//        this.mDate = new Date();
         this(UUID.randomUUID());
-        this.mTime = new Time(System.currentTimeMillis());
+        this.mTime = new Date();
     }
 
     public Crime(UUID id) {
@@ -36,10 +33,10 @@ public class Crime {
     public void setTitle(String title) {
         mTitle = title;
     }
-    public Time getTime() {
+    public Date getTime() {
         return mTime;
     }
-    public void setTime(Time time) {
+    public void setTime(Date time) {
         mTime = time;
     }
     public Date getDate() { return mDate; }

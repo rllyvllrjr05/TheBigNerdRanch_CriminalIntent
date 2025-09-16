@@ -80,9 +80,6 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_CONTACT = 5;
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 6;
 
-    private static final int DATE_FORMAT = java.text.DateFormat.FULL;
-    private static final int TIME_FORMAT = java.text.DateFormat.SHORT;
-
     /**
      * Required interface for hosting activities
      */
@@ -152,7 +149,7 @@ public class CrimeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
         setHasOptionsMenu(true);
-        mTitleField = (EditText) v.findViewById(R.id.crime_title);
+        mTitleField = v.findViewById(R.id.crime_title);
         mTitleField.setText(mCrime.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -173,14 +170,14 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton = (Button) v.findViewById(R.id.crime_date);
+        mDateButton = v.findViewById(R.id.crime_date);
         final Date currentDate = mCrime.getDate();
 
         String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", currentDate).toString();
         mDateButton.setText(formattedDate);
 
-        mTimeButton = (Button) v.findViewById(R.id.crime_time);
-        String formattedTime = DateFormat.format("HH:mm", mCrime.getTime()).toString();
+        mTimeButton = v.findViewById(R.id.crime_time);
+        String formattedTime = DateFormat.format("HH:mm", currentDate).toString();
         mTimeButton.setText(formattedTime);
 
         mDateButton.setOnClickListener(new View.OnClickListener() {
@@ -197,11 +194,13 @@ public class CrimeFragment extends Fragment {
                 } else {
                     // Show as full activity
                     Intent intent = DatePickerActivity.newIntent(getActivity(), mCrime.getDate());
-                    startActivityForResult(intent, REQUEST_DATE);
+                    intent.putExtra(EXTRA_DATE, mCrime.getDate());
+                    startActivityForResult(intent, ACTIVITY_REQUEST_DATE);
                 }
             }
         });
 
+        //Doesn't work well
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,8 +218,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mSolvedCheckBox = v.findViewById(R.id.crime_solved);
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
+        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mCrime.setSolved(isChecked);
+                updateCrime();
+            }
+        });
 
-        mReportButton = (Button) v.findViewById(R.id.crime_report);
+
+        mReportButton = v.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,7 +246,7 @@ public class CrimeFragment extends Fragment {
 
         final Intent pickContact = new Intent(Intent.ACTION_PICK,
                 ContactsContract.Contacts.CONTENT_URI);
-        mSuspectButton = (Button) v.findViewById(R.id.crime_suspect);
+        mSuspectButton = v.findViewById(R.id.crime_suspect);
         mSuspectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { startActivityForResult(pickContact, REQUEST_CONTACT); }
@@ -247,7 +256,7 @@ public class CrimeFragment extends Fragment {
             mSuspectButton.setText(mCrime.getSuspect());
         }
 
-        mCallButton = (Button) v.findViewById(R.id.crime_call_suspect);
+        mCallButton = v.findViewById(R.id.crime_call_suspect);
         mCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -267,7 +276,7 @@ public class CrimeFragment extends Fragment {
             mSuspectButton.setEnabled(false);
         }
 
-        mPhotoButton = (ImageButton) v.findViewById(R.id.crime_camera);
+        mPhotoButton = v.findViewById(R.id.crime_camera);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 //        boolean canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
@@ -293,7 +302,7 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
+        mPhotoView = v.findViewById(R.id.crime_photo);
         mPhotoView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -309,20 +318,10 @@ public class CrimeFragment extends Fragment {
         mPhotoView.setOnClickListener(view -> {
             if (mPhotoFile != null && mPhotoFile.exists()) {
                 PhotoFragment.newInstance(mPhotoFile)
-                        .show(getFragmentManager(), "PhotoDialog");
+                        .show(getParentFragmentManager(), "PhotoDialog");
             }
         });
         updatePhotoView();
-
-        mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
-        mSolvedCheckBox.setChecked(mCrime.isSolved());
-        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mCrime.setSolved(isChecked);
-                updateCrime();
-            }
-        });
 
         return v;
     }
@@ -335,22 +334,24 @@ public class CrimeFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) return;
 
-        if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+        if (requestCode == REQUEST_DATE || requestCode == REQUEST_TIME ||
+                requestCode == ACTIVITY_REQUEST_DATE || requestCode == ACTIVITY_REQUEST_TIME) {
+            final Date date;
+            if (requestCode == REQUEST_DATE || requestCode == ACTIVITY_REQUEST_DATE) {
+                date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            } else {
+                date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            }
+
             mCrime.setDate(date);
+            mDateButton.setText(DateFormat.format("EEEE, MMM dd, yyyy", date));
+            mTimeButton.setText(DateFormat.format("HH:mm", date));
             updateCrime();
-            updateDate();
-        } else if (requestCode == REQUEST_TIME) {
-            Time time = (Time) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-            mCrime.setTime(time);
-            updateCrime();
-            updateTime();
-        } else if (requestCode == REQUEST_PHOTO) {
+        }else if (requestCode == REQUEST_PHOTO) {
                 Uri uri = FileProvider.getUriForFile(getActivity(),
                         "com.bignerdranch.android.criminalintent.fileprovider",
                         mPhotoFile);
-                getActivity().revokeUriPermission(uri,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
                 updateCrime();
                 updatePhotoView();
@@ -421,7 +422,7 @@ public class CrimeFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 // If request is cancelled, the result arrays are empty.

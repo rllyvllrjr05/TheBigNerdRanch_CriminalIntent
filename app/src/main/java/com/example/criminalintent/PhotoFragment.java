@@ -20,6 +20,7 @@ public class PhotoFragment extends DialogFragment {
     public static PhotoFragment newInstance(File photoFile) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_PHOTO_PATH, photoFile);
+
         PhotoFragment fragment = new PhotoFragment();
         fragment.setArguments(args);
         return fragment;

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 
-import androidx.annotation.NonNull;
+//import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
@@ -35,10 +35,8 @@ public class DatePickerFragment extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.dialog_date, container, false);
-
         Date date = (Date) getArguments().getSerializable(ARG_DATE);
 
         Calendar calendar = Calendar.getInstance();
@@ -48,15 +46,20 @@ public class DatePickerFragment extends DialogFragment {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        mDatePicker = v.findViewById(R.id.dialog_date_picker);
+        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        final int minutes = calendar.get(Calendar.MINUTE);
+
+        View v = inflater.inflate(R.layout.dialog_date, container, false);
+
+        mDatePicker = (DatePicker) v.findViewById(R.id.dialog_date_picker);
         mDatePicker.init(year, month, day, null);
 
-        Button okButton = v.findViewById(R.id.button_ok);
+        Button okButton = (Button) v.findViewById(R.id.button_ok);
         okButton.setOnClickListener(view -> {
             int y = mDatePicker.getYear();
             int m = mDatePicker.getMonth();
             int d = mDatePicker.getDayOfMonth();
-            Date resultDate = new GregorianCalendar(y, m, d).getTime();
+            Date resultDate = new GregorianCalendar(y, m, d, hour, minutes).getTime();
             sendResult(Activity.RESULT_OK, resultDate);
             dismiss();
         });
