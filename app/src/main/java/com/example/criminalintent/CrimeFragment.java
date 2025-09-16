@@ -356,9 +356,6 @@ public class CrimeFragment extends Fragment {
                 updateCrime();
                 updatePhotoView();
 
-//                if (mPhotoFile.exists()) {
-//                    mPhotoView.setImageURI(Uri.fromFile(mPhotoFile));
-//                }
         } else if (requestCode == REQUEST_CONTACT && data != null) {
             Uri contactUri = data.getData();
             // Specify which fields you want your query to return

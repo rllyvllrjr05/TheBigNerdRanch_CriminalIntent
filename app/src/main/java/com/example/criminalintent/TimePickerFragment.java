@@ -21,7 +21,6 @@ import java.util.GregorianCalendar;
 public class TimePickerFragment extends DialogFragment {
     public static final String EXTRA_TIME = "com.example.criminalintent.time";
     private static final String ARG_TIME = "time";
-
     private TimePicker mTimePicker;
 
     @Nullable
@@ -30,17 +29,19 @@ public class TimePickerFragment extends DialogFragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_time, container, false);
 
-        Date time = (Date) getArguments().getSerializable(ARG_TIME);
+        // Fix: Add null check for getArguments()
+        Bundle args = getArguments();
+        Date time = null;
+        if (args != null) {
+            time = (Date) args.getSerializable(ARG_TIME);
+        }
+
         Calendar calendar = Calendar.getInstance();
 
         if (time != null) {
             calendar.setTime(time);
-        } else {
-            // fallback to "now"
-            time = new Date(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), 0);
-            calendar.setTime(time);
         }
-
+        // Note: If time is null, calendar already has current time, so no else block needed
 
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
@@ -57,10 +58,11 @@ public class TimePickerFragment extends DialogFragment {
         }
 
         Button okButton = v.findViewById(R.id.button_ok);
+        Calendar finalCalendar = calendar;
         okButton.setOnClickListener(view -> {
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int year = finalCalendar.get(Calendar.YEAR);
+            int month = finalCalendar.get(Calendar.MONTH);
+            int day = finalCalendar.get(Calendar.DAY_OF_MONTH);
 
             int h;
             int m;
@@ -73,7 +75,7 @@ public class TimePickerFragment extends DialogFragment {
                 m = mTimePicker.getCurrentMinute();
             }
 
-            Date resultTime = new GregorianCalendar(year, day, month ,h, m).getTime();
+            Date resultTime = new GregorianCalendar(year, month, day, h, m).getTime();
             sendResult(Activity.RESULT_OK, resultTime);
         });
 
@@ -91,7 +93,6 @@ public class TimePickerFragment extends DialogFragment {
 
     private void sendResult(int resultCode, Date time) {
         if (getTargetFragment() != null) {
-
             Intent intent = new Intent();
             intent.putExtra(EXTRA_TIME, time);
             getTargetFragment()
@@ -101,9 +102,12 @@ public class TimePickerFragment extends DialogFragment {
         }
 
         // Otherwise fragment was called from an activity
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_TIME, time);
-        getActivity().setResult(resultCode, intent);
-        getActivity().finish();
+        // Fix: Add null check for getActivity()
+        if (getActivity() != null) {
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_TIME, time);
+            getActivity().setResult(resultCode, intent);
+            getActivity().finish();
+        }
     }
 }

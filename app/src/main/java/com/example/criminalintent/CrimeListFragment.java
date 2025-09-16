@@ -40,8 +40,6 @@ public class CrimeListFragment extends Fragment {
 
     public interface Callbacks {
         void onCrimeSelected(Crime crime);
-
-        void onCrimeUpdated(Crime mCrime);
     }
 
     @Override
@@ -161,9 +159,6 @@ public class CrimeListFragment extends Fragment {
             if (item.getItemId() == R.id.new_crime) {
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-//                Intent intent = CrimePagerActivity
-//                        .newIntent(getActivity(), crime.getId());
-//                startActivity(intent);
                 updateUI();
                 mCallbacks.onCrimeSelected(crime);
                 return true;
@@ -259,9 +254,6 @@ public class CrimeListFragment extends Fragment {
         }
 
         public void onClick(View view) {
-//            Intent intent = new Intent(getActivity(), CrimeActivity.class);
-//            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
-//            startActivity(intent);
             mCallbacks.onCrimeSelected(mCrime);
         }
     }
