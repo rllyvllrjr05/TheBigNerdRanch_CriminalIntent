@@ -7,20 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".CrimeActivity">
 
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"-->
-<!--        tools:ignore="MissingConstraints">-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            app:title="CriminalIntent"-->
-<!--            app:titleTextColor="@android:color/white"/>-->
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
-
     <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fragment_container"

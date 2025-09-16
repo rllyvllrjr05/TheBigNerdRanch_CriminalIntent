@@ -200,7 +200,7 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        //Doesn't work well
+
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
