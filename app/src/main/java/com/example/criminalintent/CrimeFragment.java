@@ -42,7 +42,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import java.io.File;
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -109,7 +108,6 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
-
     }
 
     @Override
@@ -135,6 +133,8 @@ public class CrimeFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.delete_crime) {
             CrimeLab.get(getActivity()).deleteCrime(mCrime);
+            Toast.makeText(getActivity(), R.string.toast_delete_crime, Toast.LENGTH_SHORT)
+                    .show();
             getActivity().finish(); // close detail screen
             return true;
         }
@@ -183,9 +183,8 @@ public class CrimeFragment extends Fragment {
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isTablet = getResources().getBoolean(R.bool.isTablet);
 
-                if (isTablet) {
+                if (isTablet(getContext())) {
                     // Show as dialog
                     FragmentManager manager = getFragmentManager();
                     DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
@@ -206,12 +205,12 @@ public class CrimeFragment extends Fragment {
             public void onClick(View v) {
                 if (isTablet(getContext())) {
                     FragmentManager manager = getFragmentManager();
-                    TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getTime());
+                    TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
                     dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
                     dialog.show(manager, DIALOG_TIME);
                 } else {
                     // Screen is smaller - display dialog as full screen activity
-                    Intent intent = new Intent(getContext(), TimePickerActivity.class);
+                    Intent intent = TimePickerActivity.newIntent(getContext(), mCrime.getDate());
                     intent.putExtra(EXTRA_TIME, mCrime.getDate());
                     startActivityForResult(intent, ACTIVITY_REQUEST_TIME);
                 }
@@ -326,9 +325,6 @@ public class CrimeFragment extends Fragment {
         return v;
     }
 
-    private boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -347,15 +343,6 @@ public class CrimeFragment extends Fragment {
             mDateButton.setText(DateFormat.format("EEEE, MMM dd, yyyy", date));
             mTimeButton.setText(DateFormat.format("HH:mm", date));
             updateCrime();
-        }else if (requestCode == REQUEST_PHOTO) {
-                Uri uri = FileProvider.getUriForFile(getActivity(),
-                        "com.bignerdranch.android.criminalintent.fileprovider",
-                        mPhotoFile);
-                getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-                updateCrime();
-                updatePhotoView();
-
         } else if (requestCode == REQUEST_CONTACT && data != null) {
             Uri contactUri = data.getData();
             // Specify which fields you want your query to return
@@ -377,11 +364,24 @@ public class CrimeFragment extends Fragment {
                 c.moveToFirst();
                 String suspect = c.getString(0);
                 mCrime.setSuspect(suspect);
+                updateCrime();
                 mSuspectButton.setText(suspect);
             } finally {
                     c.close();
             }
+        } else if (requestCode == REQUEST_PHOTO) {
+            Uri uri = FileProvider.getUriForFile(getActivity(),
+                    "com.bignerdranch.android.criminalintent.fileprovider",
+                    mPhotoFile);
+            getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+            updateCrime();
+            updatePhotoView();
         }
+    }
+
+    private boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     public void checkReadContactsPermission() {// Here, thisActivity is the current activity
@@ -494,17 +494,6 @@ public class CrimeFragment extends Fragment {
         mPhotoView.setImageBitmap(bitmap);
     }
 
-    private void updateDate() {
-        String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
-        mDateButton.setText(formattedDate);
-//        mDateButton.setText(mCrime.getDate().toString());
-    }
-
-    private void updateTime() {
-        String formattedTime = DateFormat.format("HH:mm", mCrime.getTime()).toString();
-        mTimeButton.setText(formattedTime);
-//        mTimeButton.setText(mCrime.getTime().toString());
-    }
 
     private String getCrimeReport() {
         String solvedString = null;

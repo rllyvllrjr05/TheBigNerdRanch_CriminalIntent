@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import com.example.criminalintent.database.CrimeBaseHelper;
 import com.example.criminalintent.database.CrimeCursorWrapper;
@@ -139,7 +140,7 @@ public class CrimeLab {
         values.put(CrimeDbSchema.CrimeTable.Cols.UUID, crime.getId().toString());
         values.put(CrimeDbSchema.CrimeTable.Cols.TITLE, crime.getTitle());
         values.put(CrimeDbSchema.CrimeTable.Cols.DATE, crime.getDate().getTime());
-        values.put(CrimeDbSchema.CrimeTable.Cols.TIME, crime.getTime().getTime());
+        values.put(CrimeDbSchema.CrimeTable.Cols.TIME, crime.getDate().getTime());
         values.put(CrimeDbSchema.CrimeTable.Cols.SOLVED, crime.isSolved() ? 1 : 0);
         values.put(CrimeDbSchema.CrimeTable.Cols.SUSPECT, crime.getSuspect());
 

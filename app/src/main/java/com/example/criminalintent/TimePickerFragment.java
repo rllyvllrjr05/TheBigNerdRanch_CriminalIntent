@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,27 +22,32 @@ import java.util.GregorianCalendar;
 public class TimePickerFragment extends DialogFragment {
     public static final String EXTRA_TIME = "com.example.criminalintent.time";
     private static final String ARG_TIME = "time";
+
     private TimePicker mTimePicker;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.dialog_time, container, false);
 
-        // Fix: Add null check for getArguments()
-        Bundle args = getArguments();
-        Date time = null;
-        if (args != null) {
-            time = (Date) args.getSerializable(ARG_TIME);
-        }
+        Date time = (Date) getArguments().getSerializable(ARG_TIME);
+
+//        // Fix: Add null check for getArguments()
+//        Bundle args = getArguments();
+//        Date time = null;
+//        if (args != null) {
+//            time = (Date) args.getSerializable(ARG_TIME);
+//        }
 
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
 
-        if (time != null) {
-            calendar.setTime(time);
-        }
+//        if (time != null) {
+//            calendar.setTime(time);
+//        }
         // Note: If time is null, calendar already has current time, so no else block needed
+
+        View v = inflater.inflate(R.layout.dialog_time, container, false);
 
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
@@ -74,6 +80,7 @@ public class TimePickerFragment extends DialogFragment {
                 h = mTimePicker.getCurrentHour();
                 m = mTimePicker.getCurrentMinute();
             }
+            Log.i("TimePickerFragment", "The values are as follows: year-" + year + " month-" + month + " day-" + day + " hour-" + hour + " minutes-" + minute);
 
             Date resultTime = new GregorianCalendar(year, month, day, h, m).getTime();
             sendResult(Activity.RESULT_OK, resultTime);

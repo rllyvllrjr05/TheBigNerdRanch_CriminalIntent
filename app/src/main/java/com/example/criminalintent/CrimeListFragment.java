@@ -48,17 +48,17 @@ public class CrimeListFragment extends Fragment {
         mCallbacks = (Callbacks) context;
     }
 
-    public void onCrimeUpdated(Crime crime) {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
-
-        if (mAdapter == null) {
-            mAdapter = new CrimeAdapter(crimes);
-            mCrimeRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
-    }
+//    public void onCrimeUpdated(Crime crime) {
+//        CrimeLab crimeLab = CrimeLab.get(getActivity());
+//        List<Crime> crimes = crimeLab.getCrimes();
+//
+//        if (mAdapter == null) {
+//            mAdapter = new CrimeAdapter(crimes);
+//            mCrimeRecyclerView.setAdapter(mAdapter);
+//        } else {
+//            mAdapter.notifyDataSetChanged();
+//        }
+//    }
 
 
     @Override
@@ -245,7 +245,7 @@ public class CrimeListFragment extends Fragment {
             String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
             mDateTextView.setText(formattedDate);
 
-            String formattedTime = DateFormat.format("HH:mm", mCrime.getTime()).toString();
+            String formattedTime = DateFormat.format("HH:mm", mCrime.getDate()).toString();
             mTimeTextView.setText(formattedTime);
 
 
@@ -337,7 +337,7 @@ public class CrimeListFragment extends Fragment {
             String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
             mDateTextView.setText(formattedDate);
 
-            String formattedTime = DateFormat.format("HH:mm", mCrime.getTime()).toString();
+            String formattedTime = DateFormat.format("HH:mm", mCrime.getDate()).toString();
             mTimeTextView.setText(formattedTime);
 
         }

@@ -5,6 +5,7 @@
     <item
         android:id="@+id/delete_crime"
         android:title="Delete Crime"
+        android:icon="@android:drawable/ic_menu_delete"
         android:gravity="center"
         app:showAsAction="ifRoom|withText" />
 

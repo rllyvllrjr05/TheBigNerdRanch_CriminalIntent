@@ -25,7 +25,7 @@ public class CrimeCursorWrapper extends CursorWrapper {
         Crime crime = new Crime(UUID.fromString(uuidString));
         crime.setTitle(title);
         crime.setDate(new Date(date));
-        crime.setTime(new Time(time));
+        crime.setDate(new Time(time));
         crime.setSolved(isSolved != 0);
         crime.setSuspect(suspect);
 
