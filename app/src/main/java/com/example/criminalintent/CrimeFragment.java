@@ -135,7 +135,7 @@ public class CrimeFragment extends Fragment {
             CrimeLab.get(getActivity()).deleteCrime(mCrime);
             Toast.makeText(getActivity(), R.string.toast_delete_crime, Toast.LENGTH_SHORT)
                     .show();
-            getActivity().finish(); // close detail screen
+            getActivity(); // close detail screen
             return true;
         }
         return super.onOptionsItemSelected(item);

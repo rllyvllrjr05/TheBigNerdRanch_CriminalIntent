@@ -109,9 +109,8 @@ public class CrimeListFragment extends Fragment {
                 // remove from database
                 CrimeLab.get(getActivity()).deleteCrime(crime);
 
-                // update the adapter
-                mAdapter.getCrimes().remove(position);
-                mAdapter.notifyItemRemoved(position);
+                // refresh the entire list safely
+                updateUI();
             }
         };
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(mCrimeRecyclerView);
@@ -125,6 +124,7 @@ public class CrimeListFragment extends Fragment {
         if (mUpdatedPosition != RecyclerView.NO_POSITION) {
             mAdapter.notifyItemChanged(mUpdatedPosition);
             mUpdatedPosition = RecyclerView.NO_POSITION;
+            updateUI();
         }
     }
 
@@ -196,7 +196,9 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else {
-            mAdapter.notifyItemRangeChanged(0, crimes.size());
+            mAdapter.getCrimes().clear();
+            mAdapter.getCrimes().addAll(crimes);
+            mAdapter.notifyDataSetChanged();
         }
 
         if (crimes.isEmpty()) {
@@ -231,8 +233,18 @@ public class CrimeListFragment extends Fragment {
             mSolvedImageView = (ImageView) itemView.findViewById(R.id.crime_solved);
 
             itemView.setOnClickListener(v -> {
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
-                startActivity(intent);
+                if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
+                    // Phone layout: open full screen
+                    Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+                    startActivity(intent);
+                } else {
+                    // Tablet layout: show fragment side-by-side
+                    Fragment newDetail = CrimeFragment.newInstance(mCrime.getId());
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.detail_fragment_container, newDetail)
+                            .commit();
+                }
             });
         }
 
