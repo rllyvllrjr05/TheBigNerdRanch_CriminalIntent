@@ -2,15 +2,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+<!--    <item-->
+<!--        android:id="@+id/new_crime"-->
+<!--        android:icon="@drawable/outline_add_24"-->
+<!--        android:title="@string/new_crime"-->
+<!--        app:showAsAction="ifRoom|withText" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/add_serious_crime_button"-->
+<!--        android:icon="@drawable/outline_add_24"-->
+<!--        android:title="@string/add_serious_crime_button"-->
+<!--        app:showAsAction="ifRoom|withText" />-->
+
     <item
         android:id="@+id/new_crime"
-        android:icon="@drawable/outline_add_24"
         android:title="@string/new_crime"
-        app:showAsAction="ifRoom|withText" />
+        android:icon="@drawable/outline_add_24"
+        app:showAsAction="ifRoom|withText">
+
+        <menu>
+            <item
+                android:id="@+id/add_normal_crime"
+                android:title="@string/add_normal_crime" />
+
+            <item
+                android:id="@+id/add_serious_crime"
+                android:title="@string/add_serious_crime" />
+        </menu>
+    </item>
 
     <item
         android:id="@+id/show_subtitle"
         android:title="@string/show_subtitle"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom|withText"/>
 
 </menu>

@@ -22,7 +22,7 @@ public class Crime {
     public Crime(UUID id) {
         mId = id;
         mDate = new Date();
-//        this.mTime = new Time();
+        mRequiresPolice = Math.random() < 0.5;
     }
 
     public UUID getId() {

@@ -43,7 +43,7 @@ public class CrimeLab {
 //            crime.setRequiresPolice(i % 2 != 0); // every other crime requires police
 //            crime.setSolved(i % 2 == 0);         // every other crime solved
 //
-//            mCrimes.add(crime);
+//            mCrimeMap.add(crime);
 //            mCrimeMap.put(crime.getId(), crime); // store in HashMap too
 //        }
 //
@@ -53,6 +53,7 @@ public class CrimeLab {
 //            crime.setRequiresPolice(i % 2 == 0); // every other crime requires police
 //            crime.setSolved(i % 2 == 0); // Every other one
 //            mCrimes.add(crime);
+//            mCrimeMap.put(crime.getId(), crime); // store in HashMap too
 //        }
     }
 
@@ -143,6 +144,7 @@ public class CrimeLab {
         values.put(CrimeDbSchema.CrimeTable.Cols.TIME, crime.getDate().getTime());
         values.put(CrimeDbSchema.CrimeTable.Cols.SOLVED, crime.isSolved() ? 1 : 0);
         values.put(CrimeDbSchema.CrimeTable.Cols.SUSPECT, crime.getSuspect());
+        values.put(CrimeDbSchema.CrimeTable.Cols.REQUIRES_POLICE, crime.isRequiresPolice() ? 1 : 0);
 
         return values;
     }

@@ -1,5 +1,6 @@
 package com.example.criminalintent;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class CrimeListFragment extends Fragment {
 
     private LinearLayout mEmptyView;
     private Button mAddCrimeButton;
+    private Button mAddSeriousCrimeButton;
     private Callbacks mCallbacks;
 
     public interface Callbacks {
@@ -67,12 +69,14 @@ public class CrimeListFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
-        mAddCrimeButton = (Button) view.findViewById(R.id.add_crime_button);
+        mAddCrimeButton = (Button) view.findViewById(R.id.add_normal_crime);
+        mAddSeriousCrimeButton = (Button) view.findViewById(R.id.add_serious_crime);
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -83,6 +87,13 @@ public class CrimeListFragment extends Fragment {
 
         mAddCrimeButton.setOnClickListener(v -> {
             Crime crime = new Crime();
+
+            if (CrimeLab.get(getActivity()).getCrimes().size() % 2 != 0) {
+                crime.setRequiresPolice(false);
+            } else if (CrimeLab.get(getActivity()).getCrimes().size() % 2 == 0) {
+                crime.setRequiresPolice(true);
+            }
+
             CrimeLab.get(getActivity()).addCrime(crime);
             Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
             startActivity(intent);
@@ -97,7 +108,7 @@ public class CrimeListFragment extends Fragment {
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder,
                                   @NonNull RecyclerView.ViewHolder target) {
-                return false; // we don’t support drag & drop
+                return false;
             }
 
             @Override
@@ -106,10 +117,8 @@ public class CrimeListFragment extends Fragment {
 
                 Crime crime = mAdapter.getCrimes().get(position);
 
-                // remove from database
                 CrimeLab.get(getActivity()).deleteCrime(crime);
 
-                // refresh the entire list safely
                 updateUI();
             }
         };
