@@ -22,7 +22,6 @@ public class Crime {
     public Crime(UUID id) {
         mId = id;
         mDate = new Date();
-        mRequiresPolice = Math.random() < 0.5;
     }
 
     public UUID getId() {

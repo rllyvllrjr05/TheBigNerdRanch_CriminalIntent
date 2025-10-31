@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -17,7 +17,6 @@
         android:id="@+id/crime_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:text="Serious Crime Title" />

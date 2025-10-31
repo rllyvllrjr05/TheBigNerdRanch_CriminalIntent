@@ -22,7 +22,7 @@
 
         <menu>
             <item
-                android:id="@+id/add_normal_crime"
+                android:id="@+id/add_new_crime"
                 android:title="@string/add_normal_crime" />
 
             <item

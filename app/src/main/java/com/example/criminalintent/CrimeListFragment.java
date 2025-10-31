@@ -75,8 +75,7 @@ public class CrimeListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
-        mAddCrimeButton = (Button) view.findViewById(R.id.add_normal_crime);
-        mAddSeriousCrimeButton = (Button) view.findViewById(R.id.add_serious_crime);
+        mAddCrimeButton = (Button) view.findViewById(R.id.add_crime_button);
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -87,13 +86,6 @@ public class CrimeListFragment extends Fragment {
 
         mAddCrimeButton.setOnClickListener(v -> {
             Crime crime = new Crime();
-
-            if (CrimeLab.get(getActivity()).getCrimes().size() % 2 != 0) {
-                crime.setRequiresPolice(false);
-            } else if (CrimeLab.get(getActivity()).getCrimes().size() % 2 == 0) {
-                crime.setRequiresPolice(true);
-            }
-
             CrimeLab.get(getActivity()).addCrime(crime);
             Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
             startActivity(intent);
@@ -131,9 +123,10 @@ public class CrimeListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (mUpdatedPosition != RecyclerView.NO_POSITION) {
+            Crime updatedCrime = CrimeLab.get(getActivity()).getCrimes().get(mUpdatedPosition);
+            mAdapter.getCrimes().set(mUpdatedPosition, updatedCrime);
             mAdapter.notifyItemChanged(mUpdatedPosition);
             mUpdatedPosition = RecyclerView.NO_POSITION;
-            updateUI();
         }
     }
 
@@ -165,8 +158,15 @@ public class CrimeListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-            if (item.getItemId() == R.id.new_crime) {
+            if (item.getItemId() == R.id.add_new_crime) {
                 Crime crime = new Crime();
+                CrimeLab.get(getActivity()).addCrime(crime);
+                updateUI();
+                mCallbacks.onCrimeSelected(crime);
+                return true;
+            } else if (item.getItemId() == R.id.add_serious_crime){
+                Crime crime = new Crime();
+                crime.setRequiresPolice(true);
                 CrimeLab.get(getActivity()).addCrime(crime);
                 updateUI();
                 mCallbacks.onCrimeSelected(crime);
@@ -343,6 +343,21 @@ public class CrimeListFragment extends Fragment {
             mDateTextView = itemView.findViewById(R.id.crime_date);
             mTimeTextView = itemView.findViewById(R.id.crime_time);
             mContactPoliceButton = itemView.findViewById(R.id.contact_police_button);
+
+            itemView.setOnClickListener(v -> {
+                if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
+                    // Phone layout: open full screen
+                    Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+                    startActivity(intent);
+                } else {
+                    // Tablet layout: show fragment side-by-side
+                    Fragment newDetail = CrimeFragment.newInstance(mCrime.getId());
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.detail_fragment_container, newDetail)
+                            .commit();
+                }
+            });
 
             mContactPoliceButton.setOnClickListener(v -> {
                 Toast.makeText(getActivity(), "Calling police for " + mCrime.getTitle(),

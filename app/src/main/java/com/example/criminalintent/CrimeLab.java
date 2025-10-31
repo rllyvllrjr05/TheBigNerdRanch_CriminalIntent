@@ -40,20 +40,20 @@ public class CrimeLab {
 //        for (int i = 0; i < 100; i++) {
 //            Crime crime = new Crime();
 //            crime.setTitle("Crime #" + i);
-//            crime.setRequiresPolice(i % 2 != 0); // every other crime requires police
-//            crime.setSolved(i % 2 == 0);         // every other crime solved
+//            crime.setRequiresPolice(i % 2 != 0);
+//            crime.setSolved(i % 2 == 0);
 //
 //            mCrimeMap.add(crime);
-//            mCrimeMap.put(crime.getId(), crime); // store in HashMap too
+//            mCrimeMap.put(crime.getId(), crime);
 //        }
 //
 //        for (int i = 0; i < 100; i++) {
 //            Crime crime = new Crime();
 //            crime.setTitle("Crime #" + i);
-//            crime.setRequiresPolice(i % 2 == 0); // every other crime requires police
-//            crime.setSolved(i % 2 == 0); // Every other one
+//            crime.setRequiresPolice(i % 2 == 0);
+//            crime.setSolved(i % 2 == 0);
 //            mCrimes.add(crime);
-//            mCrimeMap.put(crime.getId(), crime); // store in HashMap too
+//            mCrimeMap.put(crime.getId(), crime);
 //        }
     }
 

@@ -44,6 +44,7 @@ import androidx.fragment.app.FragmentManager;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
@@ -173,12 +174,21 @@ public class CrimeFragment extends Fragment {
         mDateButton = v.findViewById(R.id.crime_date);
         final Date currentDate = mCrime.getDate();
 
-        String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", currentDate).toString();
-        mDateButton.setText(formattedDate);
-
+//        String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", currentDate).toString();
+//        mDateButton.setText(formattedDate);
+//
         mTimeButton = v.findViewById(R.id.crime_time);
-        String formattedTime = DateFormat.format("HH:mm", currentDate).toString();
-        mTimeButton.setText(formattedTime);
+//        String formattedTime = DateFormat.format("HH:mm", currentDate).toString();
+//        mTimeButton.setText(formattedTime);
+
+        java.text.DateFormat formattedDate =
+                java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL, Locale.getDefault());
+        java.text.DateFormat formattedTime =
+                java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT, Locale.getDefault());
+
+        mDateButton.setText(formattedDate.format(currentDate));
+        mTimeButton.setText(formattedTime.format(currentDate));
+
 
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,6 +237,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        final Intent pickContact = new Intent(Intent.ACTION_PICK,
+                ContactsContract.Contacts.CONTENT_URI);
+
+        mSuspectButton = v.findViewById(R.id.crime_suspect);
+        mSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { startActivityForResult(pickContact, REQUEST_CONTACT); }
+        });
+
+        if (mCrime.getSuspect() != null) {
+            mSuspectButton.setText(mCrime.getSuspect());
+        }
 
         mReportButton = v.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(new View.OnClickListener() {
@@ -243,17 +265,6 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        final Intent pickContact = new Intent(Intent.ACTION_PICK,
-                ContactsContract.Contacts.CONTENT_URI);
-        mSuspectButton = v.findViewById(R.id.crime_suspect);
-        mSuspectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { startActivityForResult(pickContact, REQUEST_CONTACT); }
-        });
-
-        if (mCrime.getSuspect() != null) {
-            mSuspectButton.setText(mCrime.getSuspect());
-        }
 
         mCallButton = v.findViewById(R.id.crime_call_suspect);
         mCallButton.setOnClickListener(new View.OnClickListener() {
@@ -272,7 +283,7 @@ public class CrimeFragment extends Fragment {
         PackageManager packageManager = getActivity().getPackageManager();
         if (packageManager.resolveActivity(pickContact,
                 PackageManager.MATCH_DEFAULT_ONLY) == null) {
-            mSuspectButton.setEnabled(false);
+            mSuspectButton.setEnabled(true);
         }
 
         mPhotoButton = v.findViewById(R.id.crime_camera);
