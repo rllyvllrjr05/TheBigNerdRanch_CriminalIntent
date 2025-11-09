@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CrimeListFragment extends Fragment {
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
@@ -263,14 +264,33 @@ public class CrimeListFragment extends Fragment {
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
 
-            String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
-            mDateTextView.setText(formattedDate);
+//            String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
+            java.text.DateFormat formattedDate =
+                    java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL, Locale.getDefault());
+            mDateTextView.setText(formattedDate.format(mCrime.getDate()));
 
-            String formattedTime = DateFormat.format("HH:mm", mCrime.getDate()).toString();
-            mTimeTextView.setText(formattedTime);
-
+//            String formattedTime = DateFormat.format("HH:mm", mCrime.getDate()).toString();
+            java.text.DateFormat formattedTime =
+                    java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT, Locale.getDefault());
+            mTimeTextView.setText(formattedTime.format(mCrime.getDate()));
 
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
+
+            StringBuilder description = new StringBuilder();
+            description.append("This crime is less serious, ")
+                    .append(crime.getTitle())
+                    .append(", ")
+                    .append(formattedDate.format(crime.getDate()))
+                    .append(", ")
+                    .append(formattedTime.format(crime.getDate()));
+
+            if (crime.isSolved()) {
+                description.append(", case solved");
+            } else {
+                description.append(", case not solved");
+            }
+
+            itemView.setContentDescription(description.toString());
 
         }
 
@@ -302,7 +322,7 @@ public class CrimeListFragment extends Fragment {
                 View view = layoutInflater.inflate(R.layout.list_item_crime_police, parent, false);
                 return new SeriousCrimeHolder(view);
             } else {
-//                View view = layoutInflater.inflate(R.layout.list_item_crime, parent, false);
+                View view = layoutInflater.inflate(R.layout.list_item_crime, parent, false);
                 return new CrimeHolder(layoutInflater, parent);
             }
         }
@@ -335,6 +355,7 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private TextView mTimeTextView;
         private Button mContactPoliceButton;
+        private ImageView mSolvedImageView;
         private Crime mCrime;
 
         public SeriousCrimeHolder(View itemView) {
@@ -342,7 +363,10 @@ public class CrimeListFragment extends Fragment {
             mTitleTextView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
             mTimeTextView = itemView.findViewById(R.id.crime_time);
+            mSolvedImageView = (ImageView) itemView.findViewById(R.id.crime_solved);
+
             mContactPoliceButton = itemView.findViewById(R.id.contact_police_button);
+
 
             itemView.setOnClickListener(v -> {
                 if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
@@ -370,12 +394,31 @@ public class CrimeListFragment extends Fragment {
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
 
-            String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
-            mDateTextView.setText(formattedDate);
+            java.text.DateFormat formattedDate =
+                    java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL, Locale.getDefault());
+            mDateTextView.setText(formattedDate.format(mCrime.getDate()));
 
-            String formattedTime = DateFormat.format("HH:mm", mCrime.getDate()).toString();
-            mTimeTextView.setText(formattedTime);
+            java.text.DateFormat formattedTime =
+                    java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT, Locale.getDefault());
+            mTimeTextView.setText(formattedTime.format(mCrime.getDate()));
 
+            mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
+
+            StringBuilder description = new StringBuilder();
+            description.append("This crime is serious, ")
+                    .append(crime.getTitle())
+                    .append(", ")
+                    .append(formattedDate.format(crime.getDate()))
+                    .append(", ")
+                    .append(formattedTime.format(crime.getDate()));
+
+            if (crime.isSolved()) {
+                description.append(", case solved");
+            } else {
+                description.append(", case not solved");
+            }
+
+            itemView.setContentDescription(description.toString());
         }
     }
 

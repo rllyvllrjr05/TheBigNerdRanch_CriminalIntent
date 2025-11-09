@@ -187,8 +187,10 @@ public class CrimeFragment extends Fragment {
                 java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT, Locale.getDefault());
 
         mDateButton.setText(formattedDate.format(currentDate));
-        mTimeButton.setText(formattedTime.format(currentDate));
+        mDateButton.setContentDescription(formattedDate.format(currentDate) + "This is a Crime date.");
 
+        mTimeButton.setText(formattedTime.format(currentDate));
+        mTimeButton.setContentDescription(formattedTime.format(currentDate) + "This is a Crime Time.");
 
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -489,6 +491,8 @@ public class CrimeFragment extends Fragment {
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
+            mPhotoView.setContentDescription(
+                    getString(R.string.crime_photo_no_image_description));
             return;
         }
 
@@ -503,6 +507,8 @@ public class CrimeFragment extends Fragment {
         Bitmap bitmap = PictureUtils.getScaledBitmap(
                 mPhotoFile.getPath(), width, height);
         mPhotoView.setImageBitmap(bitmap);
+        mPhotoView.setContentDescription(
+                getString(R.string.crime_photo_image_description));
     }
 
 

@@ -6,6 +6,14 @@
     <string name="crime_title_label">Título</string>
     <string name="crime_details_label">Detalles</string>
     <string name="crime_solved_label">Solucionado</string>
+    <string name="crime_not_solved_label">No resuelto</string>
+    <string name="crime_serious_label">Este caso es serio</string>
+    <string name="crime_not_serious_label">Este caso no es grave.</string>
+
+    <string name="crime_photo_button_description">Toma una foto de la escena del crimen</string>
+    <string name="crime_photo_no_image_description">Foto de la escena del crimen (no establecido)</string>
+    <string name="crime_photo_image_description">Foto de la escena del crimen (establecido)</string>
+    <string name="contact_police_button_description">Contactar a la policía</string>
 
     <string name="date_picker_title">Fecha del crimen:</string>
     <string name="at_string_between_time_and_date">"@"</string>
